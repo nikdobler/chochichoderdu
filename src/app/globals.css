@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  color: #171717;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* PWA: verhindert Pull-to-Refresh-Bounce auf iOS */
+html {
+  overscroll-behavior: none;
+}

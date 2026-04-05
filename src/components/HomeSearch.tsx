@@ -26,15 +26,15 @@ export default function HomeSearch({ recipes }: { recipes: Recipe[] }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rezept suchen..."
-            className="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+            className="w-full pl-9 pr-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
           />
         </div>
         <button
           onClick={() => setFavoritesOnly(!favoritesOnly)}
           className={`px-3 py-2 rounded-lg border transition-colors ${
             favoritesOnly
-              ? "bg-red-50 border-red-200 text-red-600"
-              : "bg-white border-gray-200 text-gray-400 hover:text-gray-600"
+              ? "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800 text-red-600"
+              : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-400 hover:text-gray-600"
           }`}
         >
           <Heart className={`w-4 h-4 ${favoritesOnly ? "fill-red-500" : ""}`} />

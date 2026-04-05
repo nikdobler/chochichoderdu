@@ -25,14 +25,14 @@ export default async function RecipeDetailPage({
   if (!recipe) notFound();
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-20">
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-10">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-gray-400 hover:text-gray-600 transition-colors">
+            <Link href="/" className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 className="text-base font-bold text-gray-900 line-clamp-1">
+            <h1 className="text-base font-bold text-gray-900 dark:text-gray-100 line-clamp-1">
               {recipe.title}
             </h1>
           </div>
@@ -49,7 +49,7 @@ export default async function RecipeDetailPage({
           />
         )}
 
-        <div className="flex items-center gap-4 text-sm text-gray-500">
+        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
           {recipe.total_time_minutes && (
             <span className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
@@ -77,7 +77,7 @@ export default async function RecipeDetailPage({
         )}
 
         <div>
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
             Thermomix-Schritte
           </h2>
           <RecipeSteps steps={recipe.thermomix_steps || []} />
@@ -85,10 +85,10 @@ export default async function RecipeDetailPage({
 
         {recipe.original_steps && recipe.original_steps.length > 0 && (
           <details className="group">
-            <summary className="text-sm font-medium text-gray-500 cursor-pointer hover:text-gray-700 transition-colors">
+            <summary className="text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
               Originalrezept anzeigen
             </summary>
-            <ol className="mt-3 space-y-2 text-sm text-gray-600 list-decimal list-inside">
+            <ol className="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-400 list-decimal list-inside">
               {recipe.original_steps.map((step: string, i: number) => (
                 <li key={i} className="leading-relaxed">{step}</li>
               ))}

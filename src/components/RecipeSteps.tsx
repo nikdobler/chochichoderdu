@@ -16,14 +16,14 @@ export default function RecipeSteps({ steps }: { steps: ThermomixStep[] }) {
       {steps.map((step) => (
         <div
           key={step.step_number}
-          className="bg-white rounded-xl border border-gray-100 p-4"
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4"
         >
           <div className="flex items-start gap-3">
-            <span className="flex-shrink-0 w-7 h-7 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center text-sm font-semibold">
+            <span className="flex-shrink-0 w-7 h-7 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 rounded-full flex items-center justify-center text-sm font-semibold">
               {step.step_number}
             </span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-gray-900 leading-relaxed">
+              <p className="text-sm text-gray-900 dark:text-gray-100 leading-relaxed">
                 {step.description}
               </p>
 
@@ -51,7 +51,7 @@ export default function RecipeSteps({ steps }: { steps: ThermomixStep[] }) {
               </div>
 
               {step.tip && (
-                <p className="text-xs text-orange-700 bg-orange-50 rounded-lg px-2.5 py-1.5 mt-2">
+                <p className="text-xs text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-950 rounded-lg px-2.5 py-1.5 mt-2">
                   {step.tip}
                 </p>
               )}
@@ -71,7 +71,7 @@ function Badge({
   children: React.ReactNode;
 }) {
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full">
       {icon}
       {children}
     </span>

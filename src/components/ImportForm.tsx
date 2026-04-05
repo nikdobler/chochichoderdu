@@ -141,7 +141,7 @@ export default function ImportForm() {
     return (
       <form onSubmit={handleScrape} className="space-y-4">
         <div>
-          <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="url" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Rezept-URL
           </label>
           <div className="relative">
@@ -154,7 +154,7 @@ export default function ImportForm() {
               placeholder="https://www.chefkoch.de/rezepte/..."
               required
               disabled={step === "scraping"}
-              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-sm disabled:opacity-50"
+              className="w-full pl-10 pr-3 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-sm text-gray-900 dark:text-gray-100 disabled:opacity-50"
             />
           </div>
         </div>
@@ -190,14 +190,14 @@ export default function ImportForm() {
             className="w-full h-48 object-cover rounded-xl"
           />
         )}
-        <h2 className="text-lg font-semibold text-gray-900">{scraped?.title}</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{scraped?.title}</h2>
         {scraped?.description && (
-          <p className="text-sm text-gray-600">{scraped.description}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{scraped.description}</p>
         )}
 
         {scraped && scraped.ingredients.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Zutaten</h3>
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Zutaten</h3>
             <ul className="text-sm text-gray-600 space-y-1">
               {scraped.ingredients.map((ing, i) => (
                 <li key={i} className="flex items-start gap-2">
@@ -210,8 +210,8 @@ export default function ImportForm() {
         )}
 
         {/* Optionen */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700">Optionen</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 space-y-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Optionen</h3>
 
           {/* Portionen */}
           <div className="flex items-center justify-between">
@@ -223,7 +223,7 @@ export default function ImportForm() {
               <button
                 type="button"
                 onClick={() => setServings(Math.max(1, servings - 1))}
-                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <Minus className="w-3.5 h-3.5" />
               </button>
@@ -231,7 +231,7 @@ export default function ImportForm() {
               <button
                 type="button"
                 onClick={() => setServings(Math.min(8, servings + 1))}
-                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
               </button>
@@ -269,7 +269,7 @@ export default function ImportForm() {
         <div className="flex gap-3">
           <button
             onClick={handleReset}
-            className="flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+            className="flex-1 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             Abbrechen
           </button>
@@ -290,7 +290,7 @@ export default function ImportForm() {
     return (
       <div className="text-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-orange-600 mx-auto mb-4" />
-        <p className="text-gray-600 font-medium">Wird für den Thermomix umgewandelt...</p>
+        <p className="text-gray-600 dark:text-gray-300 font-medium">Wird für den Thermomix umgewandelt...</p>
         <p className="text-gray-400 text-sm mt-1">Das kann einen Moment dauern</p>
       </div>
     );
@@ -301,15 +301,15 @@ export default function ImportForm() {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">{converted.title}</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{converted.title}</h2>
           {converted.servings && (
-            <p className="text-sm text-gray-500 mt-1">{converted.servings}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{converted.servings}</p>
           )}
         </div>
 
         {converted.ingredients.length > 0 && (
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Zutaten</h3>
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Zutaten</h3>
             <ul className="text-sm text-gray-600 space-y-1">
               {converted.ingredients.map((ing, i) => (
                 <li key={i}>
@@ -322,7 +322,7 @@ export default function ImportForm() {
         )}
 
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">Thermomix-Schritte</h3>
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Thermomix-Schritte</h3>
           <RecipeSteps steps={converted.thermomix_steps} />
         </div>
 

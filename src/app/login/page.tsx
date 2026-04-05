@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+// Login page is always dynamic via middleware redirect
 import { useRouter } from "next/navigation";
 import { ChefHat } from "lucide-react";
 

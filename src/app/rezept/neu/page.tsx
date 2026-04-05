@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import ImportForm from "@/components/ImportForm";
 import Navbar from "@/components/Navbar";
 import { ArrowLeft } from "lucide-react";

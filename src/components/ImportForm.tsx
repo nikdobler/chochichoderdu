@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { createClient } from "@/lib/supabase/client";
 import { ScrapedRecipe, Ingredient, ThermomixStep } from "@/lib/types";
 import RecipeSteps from "./RecipeSteps";
 import {
@@ -13,6 +12,12 @@ import {
   Check,
   ArrowRight,
   RotateCcw,
+  Baby,
+  Leaf,
+  Sprout,
+  Users,
+  Minus,
+  Plus,
 } from "lucide-react";
 
 type Step = "input" | "scraping" | "preview" | "converting" | "result";
@@ -31,7 +36,12 @@ export default function ImportForm() {
   const [converted, setConverted] = useState<ConversionResult | null>(null);
   const [saving, setSaving] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+
+  // Konvertierungsoptionen
+  const [servings, setServings] = useState(4);
+  const [childFriendly, setChildFriendly] = useState(false);
+  const [vegetarian, setVegetarian] = useState(false);
+  const [vegan, setVegan] = useState(false);
 
   async function handleScrape(e: React.FormEvent) {
     e.preventDefault();
@@ -63,7 +73,10 @@ export default function ImportForm() {
       const res = await fetch("/api/convert", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(scraped),
+        body: JSON.stringify({
+          recipe: scraped,
+          options: { servings, childFriendly, vegetarian, vegan },
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -81,33 +94,35 @@ export default function ImportForm() {
     if (!converted || !scraped) return;
     setSaving(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const res = await fetch("/api/recipes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: converted.title,
+          source_url: scraped.source_url,
+          source_title: scraped.title,
+          description: scraped.description || null,
+          image_url: scraped.image_url || null,
+          servings: converted.servings || `${servings} Portionen`,
+          ingredients: converted.ingredients,
+          original_steps: scraped.instructions,
+          thermomix_steps: converted.thermomix_steps,
+          raw_scraped_data: scraped,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
 
-    const { error } = await supabase.from("recipes").insert({
-      title: converted.title,
-      source_url: scraped.source_url,
-      source_title: scraped.title,
-      description: scraped.description || null,
-      image_url: scraped.image_url || null,
-      servings: converted.servings || scraped.servings || null,
-      ingredients: converted.ingredients,
-      original_steps: scraped.instructions,
-      thermomix_steps: converted.thermomix_steps,
-      created_by: user?.id,
-      raw_scraped_data: scraped,
-    });
-
-    if (error) {
-      toast.error("Speichern fehlgeschlagen: " + error.message);
+      toast.success("Rezept gespeichert!");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Speichern fehlgeschlagen"
+      );
       setSaving(false);
-      return;
     }
-
-    toast.success("Rezept gespeichert!");
-    router.push("/");
-    router.refresh();
   }
 
   function handleReset() {
@@ -115,6 +130,10 @@ export default function ImportForm() {
     setStep("input");
     setScraped(null);
     setConverted(null);
+    setServings(4);
+    setChildFriendly(false);
+    setVegetarian(false);
+    setVegan(false);
   }
 
   // Step: URL eingeben
@@ -160,10 +179,10 @@ export default function ImportForm() {
     );
   }
 
-  // Step: Preview des gescrapten Rezepts
+  // Step: Preview mit Optionen
   if (step === "preview") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         {scraped?.image_url && (
           <img
             src={scraped.image_url}
@@ -189,6 +208,63 @@ export default function ImportForm() {
             </ul>
           </div>
         )}
+
+        {/* Optionen */}
+        <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-4">
+          <h3 className="text-sm font-semibold text-gray-700">Optionen</h3>
+
+          {/* Portionen */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Users className="w-4 h-4" />
+              Portionen
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setServings(Math.max(1, servings - 1))}
+                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+              >
+                <Minus className="w-3.5 h-3.5" />
+              </button>
+              <span className="text-sm font-semibold w-4 text-center">{servings}</span>
+              <button
+                type="button"
+                onClick={() => setServings(Math.min(8, servings + 1))}
+                className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Toggles */}
+          <OptionToggle
+            icon={<Baby className="w-4 h-4" />}
+            label="Kinderfreundlich"
+            sublabel="Mild, kleine Stücke"
+            active={childFriendly}
+            onToggle={() => setChildFriendly(!childFriendly)}
+          />
+          <OptionToggle
+            icon={<Leaf className="w-4 h-4" />}
+            label="Vegetarisch"
+            active={vegetarian}
+            onToggle={() => {
+              setVegetarian(!vegetarian);
+              if (!vegetarian) setVegan(false);
+            }}
+          />
+          <OptionToggle
+            icon={<Sprout className="w-4 h-4" />}
+            label="Vegan"
+            active={vegan}
+            onToggle={() => {
+              setVegan(!vegan);
+              if (!vegan) setVegetarian(false);
+            }}
+          />
+        </div>
 
         <div className="flex gap-3">
           <button
@@ -276,4 +352,43 @@ export default function ImportForm() {
   }
 
   return null;
+}
+
+function OptionToggle({
+  icon,
+  label,
+  sublabel,
+  active,
+  onToggle,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  sublabel?: string;
+  active: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="w-full flex items-center justify-between py-1"
+    >
+      <div className="flex items-center gap-2 text-sm text-gray-600">
+        {icon}
+        <span>{label}</span>
+        {sublabel && <span className="text-xs text-gray-400">({sublabel})</span>}
+      </div>
+      <div
+        className={`w-10 h-6 rounded-full transition-colors relative ${
+          active ? "bg-orange-500" : "bg-gray-200"
+        }`}
+      >
+        <div
+          className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+            active ? "translate-x-5" : "translate-x-1"
+          }`}
+        />
+      </div>
+    </button>
+  );
 }

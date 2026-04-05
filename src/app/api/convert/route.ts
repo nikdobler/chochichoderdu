@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chatCompletion } from "@/lib/llm";
-import { THERMOMIX_SYSTEM_PROMPT, buildConversionPrompt } from "@/lib/prompts";
+import {
+  THERMOMIX_SYSTEM_PROMPT,
+  buildConversionPrompt,
+  ConversionOptions,
+} from "@/lib/prompts";
 import { ScrapedRecipe, Ingredient, ThermomixStep } from "@/lib/types";
 
 export const maxDuration = 30;
@@ -12,9 +16,14 @@ interface ConversionResult {
   thermomix_steps: ThermomixStep[];
 }
 
+interface ConvertRequest {
+  recipe: ScrapedRecipe;
+  options: ConversionOptions;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const recipe: ScrapedRecipe = await request.json();
+    const { recipe, options }: ConvertRequest = await request.json();
 
     if (!recipe.title && recipe.ingredients.length === 0) {
       return NextResponse.json(
@@ -23,14 +32,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userPrompt = buildConversionPrompt(recipe);
+    const userPrompt = buildConversionPrompt(recipe, options);
 
     const response = await chatCompletion([
       { role: "system", content: THERMOMIX_SYSTEM_PROMPT },
       { role: "user", content: userPrompt },
     ]);
 
-    // JSON aus der Antwort extrahieren (LLM gibt manchmal Markdown-Codeblocks zurück)
+    // JSON aus der Antwort extrahieren
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error("LLM hat kein gültiges JSON zurückgegeben");
@@ -38,7 +47,6 @@ export async function POST(request: NextRequest) {
 
     const result: ConversionResult = JSON.parse(jsonMatch[0]);
 
-    // Grundvalidierung
     if (!result.thermomix_steps || !Array.isArray(result.thermomix_steps)) {
       throw new Error("Keine Thermomix-Schritte in der Antwort");
     }

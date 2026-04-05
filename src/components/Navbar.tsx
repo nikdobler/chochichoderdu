@@ -2,20 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, PlusCircle, LogOut } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { Home, PlusCircle } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const supabase = createClient();
-
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  }
 
   const linkClass = (path: string) =>
     `flex flex-col items-center gap-1 text-xs transition-colors ${
@@ -35,10 +25,6 @@ export default function Navbar() {
           <PlusCircle className="w-5 h-5" />
           <span>Importieren</span>
         </Link>
-        <button onClick={handleLogout} className="flex flex-col items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors">
-          <LogOut className="w-5 h-5" />
-          <span>Abmelden</span>
-        </button>
       </div>
     </nav>
   );

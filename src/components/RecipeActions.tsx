@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { Heart, Trash2 } from "lucide-react";
 
@@ -16,30 +15,29 @@ export default function RecipeActions({
   const [favorite, setFavorite] = useState(isFavorite);
   const [showConfirm, setShowConfirm] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
 
   async function toggleFavorite() {
     const newValue = !favorite;
     setFavorite(newValue);
 
-    const { error } = await supabase
-      .from("recipes")
-      .update({ is_favorite: newValue })
-      .eq("id", recipeId);
+    const res = await fetch(`/api/recipes/${recipeId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_favorite: newValue }),
+    });
 
-    if (error) {
+    if (!res.ok) {
       setFavorite(!newValue);
       toast.error("Fehler beim Speichern");
     }
   }
 
   async function handleDelete() {
-    const { error } = await supabase
-      .from("recipes")
-      .delete()
-      .eq("id", recipeId);
+    const res = await fetch(`/api/recipes/${recipeId}`, {
+      method: "DELETE",
+    });
 
-    if (error) {
+    if (!res.ok) {
       toast.error("Fehler beim Löschen");
       return;
     }

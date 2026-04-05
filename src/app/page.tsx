@@ -1,24 +1,28 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { Recipe } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import HomeSearch from "@/components/HomeSearch";
+import InviteButton from "@/components/InviteButton";
 import { ChefHat } from "lucide-react";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function HomePage() {
-  const supabase = createClient();
+  const supabase = createServiceClient();
 
-  const { data: recipes } = await supabase
+  const { data: recipes, error } = await supabase
     .from("recipes")
-    .select("*, recipe_tags(tag_id, tags(id, name))")
+    .select("*")
     .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Rezepte laden fehlgeschlagen:", error);
+  }
 
   const formattedRecipes: Recipe[] = (recipes || []).map((r) => ({
     ...r,
-    tags: r.recipe_tags
-      ?.map((rt: { tags: { id: string; name: string } | null }) => rt.tags)
-      .filter(Boolean) || [],
+    tags: [],
   }));
 
   return (
@@ -30,7 +34,10 @@ export default async function HomePage() {
               <ChefHat className="w-6 h-6 text-orange-600" />
               <h1 className="text-lg font-bold text-gray-900">Chochichoderdu</h1>
             </div>
-            <span className="text-xs text-gray-400">{formattedRecipes.length} Rezepte</span>
+            <div className="flex items-center gap-3">
+              <InviteButton />
+              <span className="text-xs text-gray-400">{formattedRecipes.length} Rezepte</span>
+            </div>
           </div>
         </div>
       </header>

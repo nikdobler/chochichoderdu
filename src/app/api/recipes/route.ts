@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       original_steps: body.original_steps,
       thermomix_steps: body.thermomix_steps,
       raw_scraped_data: body.raw_scraped_data,
+      created_by_name: body.created_by_name || null,
     });
 
     if (error) {

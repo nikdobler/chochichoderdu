@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Heart, Clock, ChefHat } from "lucide-react";
+import { Heart, Clock, ChefHat, User } from "lucide-react";
 import { Recipe } from "@/lib/types";
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
@@ -46,6 +46,12 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
             )}
             {recipe.servings && (
               <span>{recipe.servings}</span>
+            )}
+            {recipe.created_by_name && (
+              <span className="flex items-center gap-1">
+                <User className="w-3.5 h-3.5" />
+                {recipe.created_by_name}
+              </span>
             )}
           </div>
         </div>

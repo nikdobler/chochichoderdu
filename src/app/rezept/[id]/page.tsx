@@ -4,7 +4,7 @@ import RecipeSteps from "@/components/RecipeSteps";
 import RecipeActions from "@/components/RecipeActions";
 import PortionCalculator from "@/components/PortionCalculator";
 import Navbar from "@/components/Navbar";
-import { ArrowLeft, Clock, ExternalLink } from "lucide-react";
+import { ArrowLeft, Clock, ExternalLink, User } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -54,6 +54,12 @@ export default async function RecipeDetailPage({
             <span className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
               {recipe.total_time_minutes} Min.
+            </span>
+          )}
+          {recipe.created_by_name && (
+            <span className="flex items-center gap-1">
+              <User className="w-4 h-4" />
+              {recipe.created_by_name}
             </span>
           )}
           {recipe.source_url && (

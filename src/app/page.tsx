@@ -3,6 +3,7 @@ import { Recipe } from "@/lib/types";
 import Navbar from "@/components/Navbar";
 import HomeSearch from "@/components/HomeSearch";
 import InviteButton from "@/components/InviteButton";
+import UserName from "@/components/UserName";
 import { ChefHat } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export default async function HomePage() {
               <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">Chochichoderdu</h1>
             </div>
             <div className="flex items-center gap-3">
+              <UserName />
               <InviteButton />
               <span className="text-xs text-gray-400">{formattedRecipes.length} Rezepte</span>
             </div>

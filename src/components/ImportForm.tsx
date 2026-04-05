@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ScrapedRecipe, Ingredient, ThermomixStep } from "@/lib/types";
 import RecipeSteps from "./RecipeSteps";
+import { getUserName } from "./UserName";
 import {
   Link as LinkIcon,
   Loader2,
@@ -109,6 +110,7 @@ export default function ImportForm() {
           original_steps: scraped.instructions,
           thermomix_steps: converted.thermomix_steps,
           raw_scraped_data: scraped,
+          created_by_name: getUserName(),
         }),
       });
       const data = await res.json();

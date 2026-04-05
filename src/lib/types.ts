@@ -33,6 +33,7 @@ export interface Recipe {
   original_steps: string[];
   thermomix_steps: ThermomixStep[];
   is_favorite: boolean;
+  created_by_name: string | null;
   tags?: Tag[];
 }
 
